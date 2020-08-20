@@ -20,6 +20,7 @@ namespace GraphTutorial
             _msalClient = PublicClientApplicationBuilder
                 .Create(appId)
                 .WithAuthority(AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount, true)
+                // .WithTenantId("6fecd065-cb31-41b4-985c-60f2fdf1720f")
                 .Build();
         }
 
