@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 using System;
 using System.Linq;
 
@@ -44,6 +45,7 @@ namespace GraphTutorial
                 Console.WriteLine("1. Display access token");
                 Console.WriteLine("2. List calendar events");
                 Console.WriteLine("3. List license details");
+                Console.WriteLine("4. Remove license");
 
                 try
                 {
@@ -72,6 +74,10 @@ namespace GraphTutorial
                     case 3:
                         // List the licenses
                         ListLicenseDetails();
+                        break;
+                    case 4:
+                        // List the licenses
+                        RemoveLicenseAsync();
                         break;
                     default:
                         Console.WriteLine("Invalid choice! Please try again.");
@@ -130,18 +136,31 @@ namespace GraphTutorial
         {
             var licenseDetails = GraphHelper.GetLicenseDetailsAsync().Result;
 
-            Console.WriteLine("Service Plans:");
 
             foreach (var license in licenseDetails)
             {
+                Console.WriteLine($"  Sku Id: {license.SkuId}");
+                Console.WriteLine($"  Sku Partnumber : {license.SkuPartNumber}");
+                Console.WriteLine("Service Plans:");
+
                 foreach (var servicePlan in license.ServicePlans)
                 {
                     Console.WriteLine($"  Service Plan ID: {servicePlan.ServicePlanId}");
                     Console.WriteLine($"  Service Plan Name: {servicePlan.ServicePlanName}");
                     Console.WriteLine($"  Provisioning Status: {servicePlan.ProvisioningStatus}");
-                    Console.WriteLine("\n------------------------------------------------------");
+                    Console.WriteLine("\n--------");
                 }
+
+                Console.WriteLine("\n------------------------------------------------------");
             }
+        }
+
+        private static void RemoveLicenseAsync()
+        {
+            var result = GraphHelper.RemoveLicenseAsync(new Guid().ToString()).Result;
+
+            System.Console.WriteLine(JsonSerializer.Serialize(result));
+            Console.WriteLine("\n------------------------------------------------------");
         }
     }
 }

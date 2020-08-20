@@ -62,7 +62,6 @@ namespace GraphTutorial
             {
                 // GET /me/licenseDetails
                 var resultPage = await graphClient.Me.LicenseDetails.Request()
-                    .Select(e => new{e.ServicePlans})
                     .GetAsync();
 
                 return resultPage.CurrentPage;
@@ -70,6 +69,22 @@ namespace GraphTutorial
             catch (ServiceException ex)
             {
                 Console.WriteLine($"Error getting license details: {ex.Message}");
+                return null;
+            }
+        }
+
+        internal static async Task<IUserLicenseDetailsCollectionPage> RemoveLicenseAsync(string licenseGuid)
+        {
+            try
+            {
+                var resultPage = await graphClient.Users["asdfsf"].AssignLicense(new List<AssignedLicense>(), new Guid[] {new Guid(licenseGuid)}).Request()
+                    .PostAsync();
+
+                return resultPage.LicenseDetails;
+            }
+            catch (ServiceException ex)
+            {
+                Console.WriteLine($"Error assign/remove license: {ex.Message}");
                 return null;
             }
         }
